@@ -1,0 +1,54 @@
+﻿@using PC.BL;
+@model IEnumerable<ReadProductsVM>
+@{
+    List<SelectListItem> categories = ViewData["Categories"] as List<SelectListItem> ?? new();
+}
+<h3>Products</h3>
+
+<div class="d-flex justify-content-end">
+    <button class="btn btn-outline-success" onclick="document.location='/Products/Add'">Add a Product</button>
+</div>
+<div class="align-content-center">
+<form asp-action="Filter" method="get" >
+    <label><h3>Pick your Category</h3></label>
+        <select asp-items="categories" name="Id" class="px-5 py-2"></select>
+<button class="btn btn-success">Filter</button>
+</form>
+</div>
+<table class="table">
+<thead>
+<tr>
+<th scope="col">ID</th>
+            <th scope="col">Product Name</th>
+<th scope="col">Price</th>
+            <th scope="col">Category</th>
+
+</tr>
+</thead>
+<tbody>
+@foreach (var product in Model)
+        {
+            <tr>
+            <td>@product.ProductId</td>
+             <td>@product.ProductName</td>
+                <td>@product.Price</td>
+                <td>@product.Category</td>
+
+                <td>
+                    <button class="btn btn-info" onclick="document.location='/Products/Details/@product.ProductId'">Details</button>
+                </td>
+                <td>
+                    <button class="btn btn-primary" onclick="document.location='/Products/Update/@product.ProductId'">Edit</button>
+                </td>
+                <td>
+                    <form asp-action="Delete" asp-route-id="@product.ProductId" method="post" id="delete">
+                        <button class="btn btn-danger" type="button" onclick="confirmDelete()">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts{
+    <partial name="_ConfirmPartial.cshtml" />
+}
